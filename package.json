@@ -1,0 +1,23 @@
+{
+  "name": "creating_contact",
+  "version": "1.0.0",
+  "description": "Contact",
+  "main": "index.js",
+  "dependencies": {
+    "ejs": "^3.1.8",
+    "express": "^4.18.1",
+    "mongoose": "^6.3.4",
+    "nodemon": "^2.0.16"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "add",
+    "update",
+    "delete"
+  ],
+  "author": "Sagar srivastav",
+  "license": "ISC"
+}
