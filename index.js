@@ -1,8 +1,9 @@
 
 const express = require('express');
 const path = require('path');
-const port = 8000;
-
+const port = 8001;
+const db = require('./config/mongoose');
+const Contact = require('./models/contact');
 const app = express();
 
 app.set('view engine' , 'ejs');
@@ -11,42 +12,50 @@ app.use(express.urlencoded());
 app.use(express.static('assests'));
 
 
-var contactList = [
-    {
-        name:"Captain America",
-        phone : "123456789"
-    },
-    {
-        name:"Iron Man",
-        phone : "987654321"
-    },
-    {
-        name:"Thor",
-        phone : "897654321"
-    }
-]
+
 
 app.get('/' , function(req,res){
+     Contact.find({}, function(err, contact){
+    if(err){
+        console.log('Error in fetching contact from db');
+        return;
+    }
     return res.render('home',{
-       title: "contactList",
-       contact_list: contactList  });
+       title: "contact List",
+       contact_list: contact  
+    });
+});
 });
 
 app.post('/create-contact' , function(req , res){
-   contactList.push(req.body);
-    return res.redirect('/');
-
+  // contactList.push(req.body);
+    Contact.create({
+        name: req.body.name,
+        phone: req.body.phone
+    },function(err, newContact){
+if(err){console.log('error in creating a contact!!');
+return};
+   console.log('*******' , newContact);
+   return res.redirect('/');
+    });
 });
 
 app.get('/delete-contact' , function(req, res){
-    console.log(req.query);
-  let phone = req.query.phone
-  let contactIndex = contactList.findIndex(contact => contact.phone == phone);
+    //get the id from query in the url
+   
+  let id = req.query.id;
 
-  if(contactIndex != -1){
-      contactList.splice(contactIndex, 1)
+  // find the contact in the data basae using id and delete
+
+  Contact.findByIdAndDelete(id, function(err){
+   if(err)
+   {
+       console.log('error in deleting');
+   
+    return;  
   }
   return res.redirect('/');
+});
 });
 
 app.listen(port, function(err){
